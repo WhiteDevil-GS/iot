@@ -1,0 +1,19 @@
+//  Make the connection  
+//CONNECT RM17 - RM9
+//USE MALE-MALE & CONNECT DC MOTOR TO CN11
+// USE MALE-FEMALE & CONNECT DC MOTOR TO VCC
+// USE MALE-FEMALE & CONNECT CN11 TO GND
+
+int Relay_pin = 8;     // Arduino pin #23/D9  or Board pin P38
+void setup() 
+{
+  pinMode(Relay_pin, OUTPUT);  // Declare relay pin as OUTPUT
+  Serial.begin(9600);           // Start the Serial communication
+  digitalWrite(Relay_pin,HIGH);  // Make the output as high
+}
+void loop() {
+  digitalWrite(Relay_pin, LOW);  //Make the pin low 
+  delay(1000);                   // delay of 1 sec
+  digitalWrite(Relay_pin, HIGH);  // make the pin as high
+  delay(1000);                     // delay of 1 sec and continue in the loop
+}

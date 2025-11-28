@@ -1,0 +1,51 @@
+//Make a connection of PH sensor D5 to A0(J13) of aurdino
+//Make a connection of Arduino 4 pin(J12) to Rx of Ph sensor and Arduino pin 5(J12) to Ph sensor
+//Connect VCC of Ph sensor 5v to vcc and Gnd to Ground
+
+
+#include <SoftwareSerial.h>
+
+// Pins for UART mode
+#define PH_RX 4 // Arduino RX (to sensor TX)
+#define PH_TX 5  // Arduino TX (to sensor RX)
+
+// Pin for Analog mode
+#define PH_ANALOG A0
+
+// Calibration values for analog mode (adjust if needed)
+float acidVoltage = 3.00;    // Voltage at pH 4.0
+float neutralVoltage = 2.50; // Voltage at pH 7.0
+
+SoftwareSerial pHSerial(PH_RX, PH_TX); // RX, TX
+
+void setup() {
+  Serial.begin(9600);
+  pHSerial.begin(9600); // Most UART pH sensors use 9600 baud
+  Serial.println("Starting pH Sensor Test (Analog + UART)...");
+}
+
+void loop() {
+  // --------- Analog Reading ---------
+  int sensorValue = analogRead(PH_ANALOG);
+  float voltage = sensorValue * (5.0 / 1023.0);
+
+  float slope = (7.0 - 6.0) / (neutralVoltage - acidVoltage);
+  float pHValue = 12.0 - slope * (voltage - neutralVoltage);
+
+  Serial.print("[Analog] Voltage: ");
+  Serial.print(voltage, 3);
+  Serial.print(" V | pH: ");
+  Serial.println(pHValue, 2);
+
+  // --------- UART Reading ---------
+  if (pHSerial.available()) {
+    String pHData = pHSerial.readStringUntil('\n');
+    Serial.print("[UART] Raw Data: ");
+    Serial.println(pHData);
+  } else {
+    Serial.println("[UART] No data received");
+  }
+
+  Serial.println("-------------------------");
+  delay(1000);
+}

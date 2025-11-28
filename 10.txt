@@ -1,0 +1,19 @@
+* Connect RM24 to RM25
+* Now you can send and receive messages from any serial application like Hyper Terminal to Aurduino Serial Monitor and vice versa
+#include<SoftwareSerial.h>
+/* Create object named bt of the class SoftwareSerial */
+SoftwareSerial bt(0,1); /* (Rx,Tx) */
+void setup() {
+  bt.begin(115200); /* Define baud rate for software serial communication */
+  Serial.begin(115200); /* Define baud rate for serial communication */
+}
+void loop() {
+    if (bt.available()) /* If data is available on serial port */
+    {
+     Serial.write(bt.read()); /* Print character received on to the serial monitor */
+    }
+    if(Serial.available())
+    {
+      bt.write(Serial.read());
+    }
+}
